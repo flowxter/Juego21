@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------
+# .NET
+# ---------------------------------------------------------------
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userprefs
+.vs/
+.idea/
+artifacts/
+TestResults/
+*.trx
+*.coverage
+*.nupkg
+
+# ---------------------------------------------------------------
+# Unity  (client/BlackjackClient)
+# ---------------------------------------------------------------
+client/**/[Ll]ibrary/
+client/**/[Tt]emp/
+client/**/[Oo]bj/
+client/**/[Bb]uild/
+client/**/[Bb]uilds/
+client/**/[Ll]ogs/
+client/**/[Uu]serSettings/
+client/**/[Mm]emoryCaptures/
+client/**/[Rr]ecordings/
+
+# Unity genera estos .csproj/.sln automáticamente; no se versionan.
+client/**/*.csproj
+client/**/*.sln
+client/**/*.unityproj
+client/**/*.pidb
+client/**/*.booproj
+client/**/*.svd
+client/**/*.pdb.meta
+client/**/*.mdb.meta
+client/**/sysinfo.txt
+client/**/crashlytics-build.properties
+
+# Las DLL que copiamos desde Blackjack.Core son artefactos de build.
+client/**/Assets/Plugins/Blackjack/*.dll
+client/**/Assets/Plugins/Blackjack/*.pdb
+
+# ---------------------------------------------------------------
+# Secretos y entorno
+# ---------------------------------------------------------------
+appsettings.Development.json
+appsettings.Local.json
+.env
+.env.*
+!.env.example
+*.pfx
+*.key

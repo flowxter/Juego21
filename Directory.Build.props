@@ -1,0 +1,24 @@
+<Project>
+
+  <!--
+    Ajustes comunes a todos los proyectos de la solución.
+    Nota: Blackjack.Core NO hereda TargetFramework de aquí porque debe
+    seguir siendo netstandard2.1 para que Unity 6 lo pueda importar.
+  -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591: no exigimos XML doc en cada miembro público. -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>flowxter</Authors>
+    <Product>Blackjack Multijugador</Product>
+    <NeutralLanguage>es</NeutralLanguage>
+  </PropertyGroup>
+
+</Project>
