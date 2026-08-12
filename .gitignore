@@ -12,6 +12,9 @@ obj/
 .idea/
 artifacts/
 TestResults/
+# Salida de 'dotnet publish' del proyecto puente: son las DLL que el script
+# copia a Unity, se regeneran con tools/sync-unity-plugins.ps1.
+publish/
 *.trx
 *.coverage
 *.nupkg

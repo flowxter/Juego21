@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: blackjack-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: blackjack
+      POSTGRES_USER: blackjack
+      # Solo para desarrollo local. En producción va por secreto, nunca aquí.
+      POSTGRES_PASSWORD: blackjack_dev
+    ports:
+      # 5433 en el anfitrión a propósito: este equipo ya tiene un PostgreSQL
+      # instalado como servicio de Windows escuchando en el 5432, y las
+      # conexiones acababan yendo a ese en vez de al contenedor.
+      - "5433:5432"
+    volumes:
+      - blackjack-data:/var/lib/postgresql/data
+    healthcheck:
+      # No basta con pg_isready: durante la inicialización Postgres levanta un
+      # servidor temporal que ya acepta conexiones pero aún no tiene creado el
+      # rol. Se comprueba con una consulta real para no dar por lista una base
+      # a la que todavía no se puede entrar.
+      test: ["CMD-SHELL", "psql -U blackjack -d blackjack -c 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+volumes:
+  blackjack-data:

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Blackjack.Server</RootNamespace>
+    <AssemblyName>Blackjack.Server</AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blackjack.Core\Blackjack.Core.csproj" />
+    <ProjectReference Include="..\Blackjack.Data\Blackjack.Data.csproj" />
+    <ProjectReference Include="..\Blackjack.Protocol\Blackjack.Protocol.csproj" />
+  </ItemGroup>
+
+</Project>

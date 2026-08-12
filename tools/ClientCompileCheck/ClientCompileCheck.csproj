@@ -1,0 +1,109 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Compila los scripts del cliente Unity fuera del editor.
+
+    Unity solo informa de errores de compilación al abrir el proyecto, lo que
+    hace muy lento el ciclo de corregir. Este proyecto usa los mismos ficheros
+    y las mismas DLL, así que un fallo aquí es un fallo allí, y se detecta en
+    segundos desde la línea de comandos.
+
+    No forma parte del juego: no se distribuye ni se ejecuta.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <IsPackable>false</IsPackable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Nullable>disable</Nullable>
+    <!-- CS0169/CS0649: campos que Unity rellena por serialización. -->
+    <NoWarn>$(NoWarn);CS0169;CS0649;CS1701</NoWarn>
+    <UnityManaged>$(ProgramFiles)\Unity\Hub\Editor\6000.3.4f1\Editor\Data\Managed</UnityManaged>
+    <ClientPlugins>$(MSBuildThisFileDirectory)..\..\client\BlackjackClient\Assets\Plugins\Blackjack</ClientPlugins>
+    <!-- uGUI se distribuye como código fuente; Unity lo compila aquí. Solo
+         existe después de abrir el proyecto una vez. -->
+    <UnityScriptAssemblies>$(MSBuildThisFileDirectory)..\..\client\BlackjackClient\Library\ScriptAssemblies</UnityScriptAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\client\BlackjackClient\Assets\Scripts\**\*.cs" />
+    <Compile Include="..\..\client\BlackjackClient\Assets\Editor\**\*.cs" />
+  </ItemGroup>
+
+  <!--
+    Ojo con los dos UnityEngine.dll de la instalación:
+
+      Managed/UnityEngine.dll            define los tipos; choca con los módulos
+      Managed/UnityEngine/UnityEngine.dll fachada que solo los reenvía
+
+    Hay que usar la segunda. Con la primera, cada tipo aparece definido dos
+    veces y no compila nada; sin ninguna, las firmas de UnityEditor no se
+    pueden resolver.
+  -->
+  <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.AudioModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.UIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(UnityManaged)\UnityEngine\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(UnityScriptAssemblies)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- UnityEditor no está partido en módulos, así que aquí no hay fachada
+         que duplique tipos y se referencia el ensamblado directamente. -->
+    <Reference Include="UnityEditor">
+      <HintPath>$(UnityManaged)\UnityEditor.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Las mismas DLL que Unity carga desde Assets/Plugins. -->
+  <ItemGroup>
+    <Reference Include="@(PluginAssembly)" />
+  </ItemGroup>
+
+  <Target Name="ResolveClientPlugins" BeforeTargets="BeforeResolveReferences">
+    <ItemGroup>
+      <PluginDll Include="$(ClientPlugins)\*.dll" />
+      <Reference Include="%(PluginDll.Filename)">
+        <HintPath>%(PluginDll.FullPath)</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+
+</Project>
